@@ -1,6 +1,5 @@
 """
 KMP Assistant - Helper functions for querying ERPNext data
-ฟังก์ชันช่วยค้นหาข้อมูลจาก ERPNext สำหรับ AI Chatbot
 """
 import frappe
 from frappe.utils import flt, nowdate, getdate
@@ -18,10 +17,7 @@ def search_bom(query: str, limit: int = 10) -> list[dict]:
         "BOM",
         filters=filters,
         or_filters=or_filters,
-        fields=[
-            "name", "item", "item_name", "quantity",
-            "total_cost", "is_active", "is_default",
-        ],
+        fields=["name", "item", "item_name", "quantity", "total_cost", "is_active", "is_default"],
         limit_page_length=limit,
         order_by="modified desc",
     )
@@ -49,16 +45,11 @@ def check_stock(item_code: str = None, warehouse: str = None, query: str = None,
             "item_name": ["like", f"%{query}%"],
         }
 
-    fields = [
-        "item_code", "item_name", "warehouse",
-        "actual_qty", "reserved_qty", "ordered_qty",
-        "projected_qty",
-    ]
     return frappe.get_list(
         "Bin",
         filters=filters,
         or_filters=or_filters if or_filters else None,
-        fields=fields,
+        fields=["item_code", "item_name", "warehouse", "actual_qty", "reserved_qty", "ordered_qty", "projected_qty"],
         limit_page_length=limit,
         order_by="actual_qty desc",
     )
@@ -73,7 +64,7 @@ def get_order_status(
     query: str = None,
     limit: int = 10,
 ) -> list[dict]:
-    """ดูสถานะออเดอร์ (Sales Order / Purchase Order)"""
+    """ดูสถานะออเดอร์"""
     dt = order_type if order_type in ("Sales Order", "Purchase Order") else "Sales Order"
 
     filters = {"docstatus": ["!=", 2]}
@@ -140,12 +131,120 @@ def search_customer_supplier(query: str, doc_type: str = None, limit: int = 10) 
     return results
 
 
+def search_erp_general(query: str, doc_types: list = None, limit: int = 10) -> dict:
+    """ค้นหาข้อมูลทั่วไปจากหลาย DocType"""
+    if doc_types is None:
+        doc_types = ["Item", "Item Group", "Warehouse", "Customer", "Supplier"]
+
+    results = {}
+
+    search_configs = {
+        "Item": {
+            "fields": ["name", "item_name", "item_group", "stock_uom", "description"],
+            "or_filters": {"name": ["like", f"%{query}%"], "item_name": ["like", f"%{query}%"], "description": ["like", f"%{query}%"]},
+        },
+        "Item Group": {
+            "fields": ["name", "parent_item_group", "is_group"],
+            "or_filters": {"name": ["like", f"%{query}%"]},
+        },
+        "Warehouse": {
+            "fields": ["name", "warehouse_name", "company", "is_group"],
+            "or_filters": {"name": ["like", f"%{query}%"], "warehouse_name": ["like", f"%{query}%"]},
+        },
+        "Customer": {
+            "fields": ["name", "customer_name", "customer_group", "territory"],
+            "or_filters": {"name": ["like", f"%{query}%"], "customer_name": ["like", f"%{query}%"]},
+        },
+        "Supplier": {
+            "fields": ["name", "supplier_name", "supplier_group", "country"],
+            "or_filters": {"name": ["like", f"%{query}%"], "supplier_name": ["like", f"%{query}%"]},
+        },
+    }
+
+    for dt in doc_types:
+        if dt not in search_configs:
+            continue
+        cfg = search_configs[dt]
+        try:
+            data = frappe.get_list(
+                dt,
+                or_filters=cfg["or_filters"],
+                fields=cfg["fields"],
+                limit_page_length=limit,
+            )
+            results[dt] = data
+        except Exception:
+            results[dt] = []
+
+    return results
+
+
+def get_system_info() -> dict:
+    """ดึงข้อมูลระบบ ERPNext"""
+    info = {}
+
+    # Company
+    companies = frappe.get_all("Company", fields=["name", "company_name", "default_currency", "country"])
+    info["companies"] = companies
+
+    # Fiscal Year
+    try:
+        fiscal_years = frappe.get_all(
+            "Fiscal Year",
+            filters={"disabled": 0},
+            fields=["name", "year_start_date", "year_end_date"],
+            order_by="year_start_date desc",
+            limit_page_length=3,
+        )
+        info["fiscal_years"] = fiscal_years
+    except Exception:
+        info["fiscal_years"] = []
+
+    # Counts
+    for dt in ["Item", "Customer", "Supplier", "Sales Order", "Purchase Order", "BOM"]:
+        try:
+            info[f"{dt.lower().replace(' ', '_')}_count"] = frappe.db.count(dt)
+        except Exception:
+            info[f"{dt.lower().replace(' ', '_')}_count"] = 0
+
+    return info
+
+
+def get_recent_activity(limit: int = 10) -> dict:
+    """ดึงกิจกรรมล่าสุดในระบบ"""
+    activity = {}
+
+    doc_types = [
+        ("Sales Order", ["name", "customer", "grand_total", "status", "modified"]),
+        ("Purchase Order", ["name", "supplier", "grand_total", "status", "modified"]),
+        ("Stock Entry", ["name", "stock_entry_type", "posting_date", "modified"]),
+        ("Item", ["name", "item_name", "creation", "modified"]),
+    ]
+
+    for dt, fields in doc_types:
+        try:
+            data = frappe.get_list(
+                dt,
+                fields=fields,
+                order_by="modified desc",
+                limit_page_length=limit,
+            )
+            activity[dt] = data
+        except Exception:
+            activity[dt] = []
+
+    return activity
+
+
 # Map function names for OpenAI function calling
 TOOL_FUNCTIONS = {
     "search_bom": search_bom,
     "check_stock": check_stock,
     "get_order_status": get_order_status,
     "search_customer_supplier": search_customer_supplier,
+    "search_erp_general": search_erp_general,
+    "get_system_info": get_system_info,
+    "get_recent_activity": get_recent_activity,
 }
 
 TOOL_DEFINITIONS = [
@@ -208,10 +307,54 @@ TOOL_DEFINITIONS = [
                 "type": "object",
                 "properties": {
                     "query": {"type": "string", "description": "ชื่อลูกค้า/Supplier ที่ต้องการค้นหา"},
-                    "doc_type": {"type": "string", "enum": ["Customer", "Supplier"], "description": "ประเภท: Customer หรือ Supplier (ถ้าไม่ระบุจะค้นทั้งสอง)"},
+                    "doc_type": {"type": "string", "enum": ["Customer", "Supplier"], "description": "ประเภท"},
                     "limit": {"type": "integer", "description": "จำนวนผลลัพธ์สูงสุด", "default": 10},
                 },
                 "required": ["query"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_erp_general",
+            "description": "ค้นหาข้อมูลทั่วไปจากหลาย DocType พร้อมกัน เช่น Item, Item Group, Warehouse, Customer, Supplier ใช้เมื่อต้องการค้นหากว้างๆ",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "คำค้นหา"},
+                    "doc_types": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "รายการ DocType ที่ต้องการค้น เช่น ['Item', 'Customer'] ถ้าไม่ระบุจะค้นทั้งหมด",
+                    },
+                    "limit": {"type": "integer", "description": "จำนวนผลลัพธ์สูงสุดต่อ DocType", "default": 10},
+                },
+                "required": ["query"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_system_info",
+            "description": "ดึงข้อมูลระบบ ERPNext เช่น ชื่อบริษัท, ปีบัญชี, จำนวนข้อมูลในระบบ ใช้เมื่อต้องการรู้สถานะระบบ",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_recent_activity",
+            "description": "ดึงกิจกรรมล่าสุดในระบบ เช่น ออเดอร์ล่าสุด, สินค้าที่เพิ่งเพิ่ม, Stock Entry ล่าสุด",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "limit": {"type": "integer", "description": "จำนวนผลลัพธ์สูงสุด", "default": 10},
+                },
             },
         },
     },

@@ -1,0 +1,68 @@
+{
+    "actions": [],
+    "creation": "2026-02-20 22:00:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": ["session", "message_index", "rating", "comment", "user"],
+    "fields": [
+        {
+            "fieldname": "session",
+            "fieldtype": "Link",
+            "label": "Session",
+            "options": "KMP Chat Session",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "message_index",
+            "fieldtype": "Int",
+            "label": "Message Index",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "rating",
+            "fieldtype": "Select",
+            "label": "Rating",
+            "options": "\npositive\nnegative",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "comment",
+            "fieldtype": "Small Text",
+            "label": "Comment"
+        },
+        {
+            "fieldname": "user",
+            "fieldtype": "Link",
+            "label": "User",
+            "options": "User",
+            "default": "__user"
+        }
+    ],
+    "links": [],
+    "modified": "2026-02-20 22:00:00",
+    "modified_by": "Administrator",
+    "module": "KMP Assistant",
+    "name": "KMP Chat Feedback",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "read": 1,
+            "write": 1,
+            "role": "System Manager"
+        },
+        {
+            "create": 1,
+            "read": 1,
+            "role": "All"
+        }
+    ],
+    "sort_field": "creation",
+    "sort_order": "DESC",
+    "title_field": "rating",
+    "autoname": "autoincrement",
+    "naming_rule": "Autoincrement"
+}

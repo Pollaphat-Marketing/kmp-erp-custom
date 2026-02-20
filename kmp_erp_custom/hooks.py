@@ -9,8 +9,8 @@ app_license = "MIT"
 # ------------------
 
 # Use raw asset paths (no esbuild bundling needed)
-app_include_css = ["/assets/kmp_erp_custom/css/kmp_assistant_widget.css"]
-app_include_js = ["/assets/kmp_erp_custom/js/kmp_assistant_widget.js"]
+app_include_css = ["/assets/kmp_erp_custom/css/kmp_widget_v2.css"]
+app_include_js = ["/assets/kmp_erp_custom/js/kmp_widget_v2.js"]
 
 # Website
 # ------------------
