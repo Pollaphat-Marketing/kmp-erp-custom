@@ -7,8 +7,7 @@
     "icon": "octicon octicon-comment-discussion",
     "standard": "Yes",
     "roles": [
-        {"role": "System Manager"},
-        {"role": "All"}
+        {"role": "System Manager"}
     ],
-    "modified": "2026-02-20 21:00:00.000000"
+    "modified": "2026-02-20 23:30:00.000000"
 }

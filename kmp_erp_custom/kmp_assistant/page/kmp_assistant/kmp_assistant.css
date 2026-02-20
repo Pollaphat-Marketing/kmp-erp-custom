@@ -1,7 +1,363 @@
-#kmp-chat-container {
-    font-family: var(--font-stack);
+:root {
+    --kmp-primary: #FF5B04;
+    --kmp-teal: #075056;
+    --kmp-light-bg: #f8f9fa;
 }
 
-#kmp-chat-input:focus {
-    box-shadow: 0 0 0 2px var(--primary-light);
+.kmp-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Tabs */
+.kmp-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+
+.kmp-tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.kmp-tab:hover {
+    color: var(--kmp-primary);
+}
+
+.kmp-tab.active {
+    color: var(--kmp-primary);
+    border-bottom-color: var(--kmp-primary);
+}
+
+.kmp-tab-content {
+    display: none;
+}
+
+.kmp-tab-content.active {
+    display: block;
+}
+
+/* Stats cards */
+.kmp-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kmp-stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.kmp-stat-card .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.kmp-stat-card .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--kmp-teal);
+}
+
+.kmp-stat-card .stat-icon {
+    float: right;
+    font-size: 24px;
+    opacity: 0.3;
+}
+
+/* Tables */
+.kmp-table-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.kmp-table-card .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+}
+
+.kmp-table-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.kmp-table-card th,
+.kmp-table-card td {
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+}
+
+.kmp-table-card th {
+    background: var(--kmp-light-bg);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.kmp-table-card tr:hover {
+    background: var(--control-bg);
+}
+
+.kmp-table-card tr.clickable {
+    cursor: pointer;
+}
+
+/* Feedback chart */
+.kmp-feedback-bar {
+    display: flex;
+    height: 24px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.kmp-feedback-bar .positive {
+    background: #36b37e;
+}
+
+.kmp-feedback-bar .negative {
+    background: #ff5630;
+}
+
+/* Settings form */
+.kmp-settings-form {
+    max-width: 700px;
+}
+
+.kmp-settings-form .form-group {
+    margin-bottom: 20px;
+}
+
+.kmp-settings-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: var(--text-color);
+}
+
+.kmp-settings-form textarea {
+    min-height: 200px;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.kmp-settings-form .form-control {
+    border-radius: 6px;
+}
+
+/* Slider */
+.kmp-slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.kmp-slider-wrap input[type="range"] {
+    flex: 1;
+    accent-color: var(--kmp-primary);
+}
+
+.kmp-slider-wrap .slider-val {
+    font-weight: 600;
+    min-width: 40px;
+}
+
+/* Badge */
+.kmp-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.kmp-badge.positive {
+    background: #e3fcef;
+    color: #006644;
+}
+
+.kmp-badge.negative {
+    background: #ffebe6;
+    color: #bf2600;
+}
+
+.kmp-badge.active {
+    background: #deebff;
+    color: #0747a6;
+}
+
+/* Modal */
+.kmp-detail-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.kmp-msg-bubble {
+    max-width: 80%;
+    padding: 10px 16px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+
+.kmp-msg-bubble.user {
+    background: var(--kmp-primary);
+    color: white;
+    margin-left: auto;
+}
+
+.kmp-msg-bubble.assistant {
+    background: var(--control-bg);
+    color: var(--text-color);
+}
+
+/* Pagination */
+.kmp-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+}
+
+/* Search bar */
+.kmp-search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.kmp-search-bar input {
+    flex: 1;
+    border-radius: 6px;
+}
+
+/* Knowledge entry form */
+.kmp-kb-form {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.kmp-kb-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+/* Loading */
+.kmp-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+/* Tools */
+.kmp-tool-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.kmp-tool-item:last-child {
+    border-bottom: none;
+}
+
+.kmp-tool-item .tool-info h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+.kmp-tool-item .tool-info p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Buttons */
+.btn-kmp {
+    background: var(--kmp-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-kmp:hover {
+    background: #e04f00;
+    color: white;
+}
+
+.btn-kmp-outline {
+    background: transparent;
+    color: var(--kmp-primary);
+    border: 1px solid var(--kmp-primary);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-kmp-outline:hover {
+    background: var(--kmp-primary);
+    color: white;
+}
+
+.btn-danger-sm {
+    background: #ff5630;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .kmp-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .kmp-kb-form .form-row {
+        grid-template-columns: 1fr;
+    }
 }

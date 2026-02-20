@@ -1,0 +1,65 @@
+{
+    "actions": [],
+    "creation": "2026-02-20 23:00:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": ["bot_name", "ai_model", "temperature", "section_prompt", "system_prompt", "section_tools", "tools_config"],
+    "fields": [
+        {
+            "fieldname": "bot_name",
+            "fieldtype": "Data",
+            "label": "Bot Name",
+            "default": "KMP Assistant"
+        },
+        {
+            "fieldname": "ai_model",
+            "fieldtype": "Select",
+            "label": "AI Model",
+            "options": "\ngpt-4o\ngpt-4o-mini\ngpt-3.5-turbo",
+            "default": "gpt-4o"
+        },
+        {
+            "fieldname": "temperature",
+            "fieldtype": "Float",
+            "label": "Temperature",
+            "default": "0.3"
+        },
+        {
+            "fieldname": "section_prompt",
+            "fieldtype": "Section Break",
+            "label": "System Prompt"
+        },
+        {
+            "fieldname": "system_prompt",
+            "fieldtype": "Long Text",
+            "label": "System Prompt"
+        },
+        {
+            "fieldname": "section_tools",
+            "fieldtype": "Section Break",
+            "label": "Tools Configuration"
+        },
+        {
+            "fieldname": "tools_config",
+            "fieldtype": "Long Text",
+            "label": "Tools Config (JSON)"
+        }
+    ],
+    "issingle": 1,
+    "links": [],
+    "modified": "2026-02-20 23:00:00",
+    "modified_by": "Administrator",
+    "module": "KMP Assistant",
+    "name": "KMP Assistant Settings",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "read": 1,
+            "write": 1,
+            "role": "System Manager"
+        }
+    ],
+    "sort_field": "creation",
+    "sort_order": "DESC"
+}

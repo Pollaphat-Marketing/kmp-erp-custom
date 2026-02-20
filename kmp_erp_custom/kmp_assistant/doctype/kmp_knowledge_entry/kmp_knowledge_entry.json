@@ -1,0 +1,55 @@
+{
+    "actions": [],
+    "autoname": "autoincrement",
+    "creation": "2026-02-20 23:00:00",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "naming_rule": "Autoincrement",
+    "field_order": ["question", "answer", "category", "is_active"],
+    "fields": [
+        {
+            "fieldname": "question",
+            "fieldtype": "Data",
+            "label": "Question",
+            "reqd": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "answer",
+            "fieldtype": "Long Text",
+            "label": "Answer",
+            "reqd": 1
+        },
+        {
+            "fieldname": "category",
+            "fieldtype": "Data",
+            "label": "Category",
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "is_active",
+            "fieldtype": "Check",
+            "label": "Active",
+            "default": 1,
+            "in_list_view": 1
+        }
+    ],
+    "links": [],
+    "modified": "2026-02-20 23:00:00",
+    "modified_by": "Administrator",
+    "module": "KMP Assistant",
+    "name": "KMP Knowledge Entry",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "create": 1,
+            "delete": 1,
+            "read": 1,
+            "write": 1,
+            "role": "System Manager"
+        }
+    ],
+    "sort_field": "creation",
+    "sort_order": "DESC",
+    "title_field": "question"
+}
