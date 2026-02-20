@@ -4,9 +4,42 @@
 (function() {
     'use strict';
 
+    // Inject CSS inline (avoid separate CSS file loading issues)
+    function injectStyles() {
+        if (document.getElementById('kmp-assistant-styles')) return;
+        const style = document.createElement('style');
+        style.id = 'kmp-assistant-styles';
+        style.textContent = `
+#kmp-assistant-widget{position:fixed;bottom:24px;right:24px;z-index:9999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+#kmp-chat-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FF5B04,#e04800);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(255,91,4,0.4);transition:all .3s ease}
+#kmp-chat-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(255,91,4,0.5)}
+#kmp-chat-panel{width:380px;height:520px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.15);flex-direction:column;overflow:hidden;animation:kmp-slide-up .3s ease}
+@keyframes kmp-slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+#kmp-chat-header{background:linear-gradient(135deg,#075056,#0a6b73);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+#kmp-chat-header button{background:rgba(255,255,255,0.15);border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s}
+#kmp-chat-header button:hover{background:rgba(255,255,255,0.3)}
+#kmp-chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f7f8fa}
+.kmp-msg{display:flex;max-width:85%}.kmp-msg-user{align-self:flex-end}.kmp-msg-bot{align-self:flex-start}
+.kmp-msg-content{padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5;word-wrap:break-word}
+.kmp-msg-user .kmp-msg-content{background:linear-gradient(135deg,#FF5B04,#e04800);color:#fff;border-bottom-right-radius:4px}
+.kmp-msg-bot .kmp-msg-content{background:#fff;color:#333;border:1px solid #e5e7eb;border-bottom-left-radius:4px}
+.kmp-typing span{animation:kmp-blink 1.4s infinite;font-weight:bold}.kmp-typing span:nth-child(2){animation-delay:.2s}.kmp-typing span:nth-child(3){animation-delay:.4s}
+@keyframes kmp-blink{0%,20%{opacity:0}50%{opacity:1}100%{opacity:0}}
+#kmp-chat-input-area{padding:12px 16px;background:#fff;border-top:1px solid #e5e7eb;display:flex;gap:8px;align-items:flex-end}
+#kmp-chat-input{flex:1;border:1px solid #d1d5db;border-radius:10px;padding:8px 12px;font-size:13px;resize:none;outline:none;max-height:100px;font-family:inherit;line-height:1.4}
+#kmp-chat-input:focus{border-color:#FF5B04;box-shadow:0 0 0 2px rgba(255,91,4,0.1)}
+#kmp-chat-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FF5B04,#e04800);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+#kmp-chat-send:hover{transform:scale(1.05)}#kmp-chat-send:disabled{opacity:.5;cursor:not-allowed}
+#kmp-chat-messages::-webkit-scrollbar{width:4px}#kmp-chat-messages::-webkit-scrollbar-track{background:transparent}#kmp-chat-messages::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
+@media(max-width:480px){#kmp-chat-panel{width:calc(100vw - 32px);height:calc(100vh - 100px)}}
+        `;
+        document.head.appendChild(style);
+    }
+
     // สร้าง Widget เมื่อ DOM พร้อม
     $(document).ready(function() {
         if (document.getElementById('kmp-assistant-widget')) return;
+        injectStyles();
         createWidget();
     });
 
