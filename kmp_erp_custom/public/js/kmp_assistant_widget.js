@@ -5,16 +5,9 @@
     'use strict';
 
     // สร้าง Widget เมื่อ DOM พร้อม
-    frappe.ready(function() {
+    $(document).ready(function() {
         if (document.getElementById('kmp-assistant-widget')) return;
         createWidget();
-    });
-
-    // เรียกอีกครั้งเมื่อ page change (SPA)
-    $(document).on('page-change', function() {
-        if (!document.getElementById('kmp-assistant-widget')) {
-            createWidget();
-        }
     });
 
     let chatOpen = false;
