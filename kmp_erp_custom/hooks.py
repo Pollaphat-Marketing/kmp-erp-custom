@@ -8,8 +8,8 @@ app_license = "MIT"
 # Includes in <head>
 # ------------------
 
-# app_include_css = "/assets/kmp_erp_custom/css/kmp_erp_custom.css"
-# app_include_js = "/assets/kmp_erp_custom/js/kmp_erp_custom.js"
+app_include_css = "/assets/kmp_erp_custom/css/kmp_assistant_widget.css"
+app_include_js = "/assets/kmp_erp_custom/js/kmp_assistant_widget.js"
 
 # Website
 # ------------------
