@@ -5,9 +5,6 @@ app_description = "KMP ERP Custom App - Custom modules, KMP Assistant, integrati
 app_email = "chart@pollaphat.co.th"
 app_license = "MIT"
 
-# Apps
-# ------------------
-
 # Includes in <head>
 # ------------------
 
@@ -25,7 +22,7 @@ app_license = "MIT"
 # Modules
 # --------------------
 
-# Custom modules will be added here as we develop:
+# Custom modules:
 # - KMP Manufacturing (สูตรตำรับ, QC, Batch Record)
 # - KMP Assistant (AI Chatbot)
 # - KMP Integration (Line, Shopee, Lazada)
@@ -43,8 +40,3 @@ app_license = "MIT"
 # -------------------------
 
 # override_doctype_class = {}
-
-# API Endpoints
-# ---------------
-
-# api_methods = {}

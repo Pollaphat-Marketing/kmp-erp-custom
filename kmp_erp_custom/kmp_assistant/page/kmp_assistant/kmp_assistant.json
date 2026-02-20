@@ -1,0 +1,13 @@
+{
+    "name": "kmp-assistant",
+    "page_name": "kmp-assistant",
+    "title": "KMP Assistant",
+    "module": "KMP Assistant",
+    "icon": "octicon octicon-comment-discussion",
+    "standard": "Yes",
+    "roles": [
+        {"role": "System Manager"},
+        {"role": "All"}
+    ],
+    "modified": "2026-02-20 21:00:00.000000"
+}
